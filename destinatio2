@@ -1,0 +1,67 @@
+MESTA = ["Praha", "Viden", "Olomouc", "Svitavy", "Zlin", "Ostrava"]
+CENY = (150, 200, 120, 120, 100, 180)
+SEZNAM_DOMEN = ("gmail.com", "seznam.cz", "email.cz")
+ODDELOVAC = "=" * 35
+AKT_ROK = 2021
+SLEVY = ("Olomouc", "Svitavy")
+print("VITEJTE U NASI APLIKACE DESTINATIO!")
+print(ODDELOVAC)
+print(
+"""
+1 - Praha   | 150
+2 - Viden   | 200
+3 - Olomouc | 120
+4 - Svitavy | 120
+5 - Zlin    | 100
+6 - Ostrava | 180
+"""
+)
+print(ODDELOVAC)
+cislo_lokality = int(input("VYBERTE CISLO LOKALITY: "))
+if 0 < cislo_lokality < len(MESTA) + 1:
+    destinace = MESTA[cislo_lokality - 1]
+    cena = CENY[cislo_lokality - 1]
+    print(f"DESTINACE: {destinace}, CENA: {cena}")
+    print(ODDELOVAC)
+else:
+    print("VAMI VYBRANE CISLO NENI V NABIDCE, UKONCUJI..")
+    quit()
+if destinace in SLEVY:
+    nova_cena = 0.75 * cena
+    print("ZISKAVATE 25% SLEVU!")
+else:
+    nova_cena = cena
+jmeno = input("JMENO: ")
+prijmeni = input("PRIJMENI: ")
+if jmeno.isalpha() and prijmeni.isalpha():
+    print(f"JMENO: {jmeno}, PRIJMENI: {prijmeni}")
+    print(ODDELOVAC)
+else:
+    print("Jmeno a prijmeni muze obsahovat jen pismena! Ukoncuji..")
+    quit()
+rok_narozeni = int(input("ROK NAROZENI: "))
+if (AKT_ROK - rok_narozeni) >= 18:
+    print(f"Pokracuji..")
+    print(ODDELOVAC)
+else:
+    print("Nase sluzby mohou vyuzivat pouze osoby starsi 18 let. Ukoncuji..")
+    quit()
+email = input("EMAIL: ")
+if "@" in email and email.split("@")[1] in SEZNAM_DOMEN:
+    print("Email je v poradku. Pokracuji..")
+    print(ODDELOVAC)
+else:
+    print("Nepodporovany format emailu. Ukoncuji..")
+    quit()
+heslo = input("HESLO: ")
+if len(heslo) >= 8 and not heslo.isalpha() and not heslo.isnumeric():
+    print("Heslo je v poradku! Odesilam objednavku")
+    print(ODDELOVAC)
+    print(f"CENA ZA LISTEK DO: {destinace}, CENA: {nova_cena}")
+    print(f"DEKUJI, {jmeno}, NA MAIL \'{email}\' TI PRIJDE KRATKY DOTAZNIK")
+else:
+    print("""Heslo musi obsahovat:
+    1. Obsahuje číslice
+    2. Obsahuje písmena
+    3. Je minimálně 8 znaků dlouhé""")
+print(ODDELOVAC)
