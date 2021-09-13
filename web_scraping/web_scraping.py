@@ -56,15 +56,16 @@ def get_district_details(district_info):
 
 def parse_data(data):
     result = []
-    row = {
-        "code of the district":"",
-        "name od the district":"",
-        "voters in list":"",
-        "issued envelopes":"",
-        "valid votes":"",
-        "parties":"",
-        "debug":data
-    }
+    for d in data:
+        row = {
+            "code of the district": d["district_num"],
+            "name od the district": d["district_name"],
+            "voters in list": d["voters_in_list"],
+            "issued envelopes": d["issued_envelopes"],
+            "valid votes": d["valid_votes"],
+            "parties": d["parties"]
+        }
+        result.append(row)
     with open('votes.csv', mode='w') as csv_file:
         fieldnames = [
         "code of the district",
@@ -72,28 +73,28 @@ def parse_data(data):
         "voters in list",
         "issued envelopes",
         "valid votes",
-        "parties",
-        "debug"
+        "parties"
         ]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
-        writer.writerow({  "code of the district":"",
-        "name od the district":"",
-        "voters in list":"",
-        "issued envelopes":"",
-        "valid votes":"",
-        "parties":"",
-        "debug":data
-        })
-    result.append(data)
+        for d in result:
+            writer.writerow({
+                "code of the district": d["code of the district"],
+                "name od the district": d["name od the district"],
+                "voters in list": d["voters in list"],
+                "issued envelopes": d["issued envelopes"],
+                "valid votes": d["valid votes"],
+                "parties": ";".join(d["parties"])   
+            })
     return result
 
 def main():
     districts = get_district_links()
+    districts_details = []
     for district in districts:
-        data = get_district_details(district)
+        districts_details.append(get_district_details(district))
     print(json.dumps(districts, indent=4))
-    dict(data)
+    test = parse_data(districts_details)
 
 if __name__ == "__main__":
     main()
