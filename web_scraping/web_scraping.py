@@ -1,5 +1,6 @@
 import csv
 import json
+import argparse
 import requests
 from bs4 import BeautifulSoup
 
@@ -29,7 +30,8 @@ def get_district_details(district_info):
     table_one = resp.findAll("table",{"id":True})
     assert len(table_one) == 1
     table_one = table_one[0]
-    tables_two = resp.findAll("table", {"summary": True})
+    tables_two = resp.findAll("table", {"id": False})
+    print(len(tables_two))
     assert len(tables_two) == 2
 
     voters_in_list = table_one.find_all("td", {"headers": "sa2"})
@@ -54,7 +56,7 @@ def get_district_details(district_info):
     district_info["parties"] = parties
     return district_info
 
-def parse_data(data):
+def parse_data(data,filename_csv):
     result = []
     for d in data:
         row = {
@@ -66,7 +68,7 @@ def parse_data(data):
             "parties": d["parties"]
         }
         result.append(row)
-    with open('votes.csv', mode='w') as csv_file:
+    with open(filename_csv, mode='w') as csv_file:
         fieldnames = [
         "code of the district",
         "name od the district",
@@ -89,12 +91,24 @@ def parse_data(data):
     return result
 
 def main():
+    parser = argparse.ArgumentParser(description='Votes')
+    parser.add_argument('--verbose',
+                        action='store_true',
+                        help='verbose flag')
+
+    parser.add_argument("chosen_district")
+    parser.add_argument("filename_csv")
+
+    args = parser.parse_args()
+    print(args)
+
     districts = get_district_links()
     districts_details = []
     for district in districts:
-        districts_details.append(get_district_details(district))
+        if args.chosen_district == district["district_num"]:
+            districts_details.append(get_district_details(district))
     print(json.dumps(districts, indent=4))
-    test = parse_data(districts_details)
+    test = parse_data(districts_details,args.filename_csv)
 
 if __name__ == "__main__":
     main()
